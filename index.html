@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarity XXX Live TV</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="header">
+🔥 CLARITY XXX LIVE
+</header>
+
+<div class="container">
+
+<div class="player-box">
+<iframe id="playerFrame" src="player.html" allowfullscreen></iframe>
+</div>
+
+<div class="channels">
+<h2>Live Channels</h2>
+
+<div id="channelList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const playlist = "https://spoo.me/XNXx"
+
+async function loadChannels(){
+
+const res = await fetch(playlist)
+const text = await res.text()
+
+const lines = text.split("\n")
+
+let channels = []
+
+for(let i=0;i<lines.length;i++){
+
+if(lines[i].startsWith("#EXTINF")){
+
+let name = lines[i].split(",")[1]
+let url = lines[i+1]
+
+channels.push({
+name:name,
+url:url
+})
+
+}
+
+}
+
+renderChannels(channels)
+
+}
+
+function renderChannels(channels){
+
+const list = document.getElementById("channelList")
+
+channels.forEach(ch=>{
+
+let btn = document.createElement("button")
+
+btn.innerText = ch.name
+
+btn.onclick = ()=>{
+
+document.getElementById("playerFrame").src =
+"player.html?src="+encodeURIComponent(ch.url)
+
+}
+
+list.appendChild(btn)
+
+})
+
+}
+
+loadChannels()
+
+</script>
+
+</body>
+</html>
